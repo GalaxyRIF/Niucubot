@@ -1,5 +1,14 @@
+# Functions
+- [x] Scrambles
+- [ ] Competition List
+- [ ] Registered competition
+- [ ] PR 
+- [ ] Local WCA data
+- [ ] Comparisons
+- [ ] Rank and records
 # Instructions
  
+
 ## Scrambles: `.event ` ##
 Randomly choose scrambles from WCA competition scrmables.
 Event short codes: 2,222, 3, 333, 4, 444, 5, 555, 6, 666, 7, 777, 3bf, 333bf ,4bf, 444bf, 5bf, 555bf py, pyram, minx, mega, clock, cl, sq, sq1, sk, skewb.
