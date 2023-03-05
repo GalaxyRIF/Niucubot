@@ -1,3 +1,4 @@
 encrypt.py
 .token
 data.pkl
+*.pyc
