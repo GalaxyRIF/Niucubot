@@ -1,6 +1,7 @@
 from .comp import *
 from random import choice
 from .scramble import get_scramble
+
 events_map={
         ".3":"333",
         ".333":"333",

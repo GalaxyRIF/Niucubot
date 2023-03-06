@@ -2,6 +2,63 @@ import urllib.request
 from bs4 import BeautifulSoup
 # process command to get get_comp args, then call get_comps and return
 
+events_map={
+        ".3":"333",
+        ".333":"333",
+        ".3bf":"333bf",
+        ".333bf":"333bf",
+        ".4":"444",
+        ".444":"444",
+        ".4bf":"444bf",
+        ".444bf":"444bf",
+        ".5":"555",
+        ".555":"555",
+        ".5bf":"555bf",
+        ".555bf":"555bf",
+        ".6":"666",
+        ".666":"666",
+        ".7":"777",
+        ".777":"777",
+        ".clock":"clock",
+        ".cl":"clock",
+        ".pyr":"pyram",
+        ".pyram":"pyram",
+        ".py":"pyram",
+        ".p":"pyram",
+        ".mega":"minx",
+        ".minx":"minx",
+        ".skewb":"skewb",
+        ".sk":"skewb",
+        ".sq":"sq1",
+        ".sq1":"sq1",
+    }
+
+# events argument parser
+# eg .comp -rcn -soc -e4/5/6+7
+
+def events_parser(message):
+    """
+    If not specified , return 'all'
+    Else, return a sequence of events"""
+    # beginning with ".comp"
+    content=message[5:]
+    if content=="":
+        return "all"
+    else:
+        events=[]
+        stack=""
+        for i in range(len(content)):
+            if content[i]!="+":
+                stack=stack+content[i]
+            else:
+                if stack in events_map.keys():
+                    events.append(events_map[stack])
+                else:
+                    # Fail to identify rhe event, considered Null event
+                    pass
+        # todo: modify get_comp to adapt to list of events
+        return events
+
 # reads competition info
 def get_comp(events="all",region="UK",comp_type=["open","closed","upcoming","full","progress"]):
     """

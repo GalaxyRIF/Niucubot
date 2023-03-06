@@ -7,8 +7,6 @@ import discord
 TOKEN=init.get_token()
 
 GUILD = "H2O"
-print(TOKEN)
-print(TOKEN)
 print(type(TOKEN),str(TOKEN))
 
 
