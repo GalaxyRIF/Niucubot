@@ -59,6 +59,40 @@ def events_parser(message):
         # todo: modify get_comp to adapt to list of events
         return events
 
+# get search url
+def get_search_url(events="all",region="UK"):
+    # URL= prefix + events + region
+    # original url is the prefix
+    url="https://www.worldcubeassociation.org/competitions?"
+    if events !="all":
+        for each_event in events:
+            url=url+"event_ids[]=%s&"%events_map["."+each_event]
+     
+    region_map={    
+        "uk":"United+Kingdom",
+        "UK":"United+Kingdom",
+        "u.k.":"United+Kingdom",
+        "U.K.":"United+Kingdom",
+        "EU":"_Europe",
+        "eu":"_Europe",
+        "europe":"_Europe",
+        "Europe":"_Europe",
+        "china":"China",
+        "CN":"China",
+        "cn":"China",
+        "China":"China",
+        "Asia":"_Asia",
+        "as":"_Asia",
+        "asia":"_Asia",
+        "all":"all"
+    }  
+
+    url=url+f"region={region_map[region]}&"
+    url=url+"&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"
+    return url
+
+
+
 # reads competition info
 def get_comp(events="all",region="UK",comp_type=["open","closed","upcoming","full","progress"]):
     """
@@ -67,16 +101,10 @@ def get_comp(events="all",region="UK",comp_type=["open","closed","upcoming","ful
     Default url set to https://www.worldcubeassociation.org/competitions?region=United+Kingdom&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list 
     which is the url for U.K. competitions
     """
-    if region in ("uk","UK","u.k."):
-        url_competition_list="https://www.worldcubeassociation.org/competitions?region=United+Kingdom&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"
-    elif region in ("eu","EU","europe","Europe"):
-        url_competition_list="https://www.worldcubeassociation.org/competitions?region=_Europe&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"
-    elif region in ("china","cn","CN","China"):
-        url_competition_list="https://www.worldcubeassociation.org/competitions?region=China&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"
-    elif region in ("Asia","asia","as"):
-        url_competition_list="https://www.worldcubeassociation.org/competitions?region=_Asia&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"    
-    else:
-        url_competition_list="https://www.worldcubeassociation.org/competitions?region=all&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list"
+    url_competition_list=get_search_url(events=events,region=region)
+    print(events)
+    print(region)
+    print(url_competition_list)
     competition_list_html=urllib.request.Request(url_competition_list, headers={'User-Agent': 'User-Agent:Mozilla/5.0'})
     html_decoded=urllib.request.urlopen(competition_list_html).read().decode(encoding='utf-8')
     bs=BeautifulSoup(html_decoded,"html.parser")
@@ -96,8 +124,8 @@ def get_comp(events="all",region="UK",comp_type=["open","closed","upcoming","ful
     # else:
     #     comps_on+=bs.find(class_="col-md-12",id=("upcoming-comps")).find(class_="list-group").find_all(class_="list-group-item not-past")
     #     try:
-    #         ongoningcomps=bs.find(class_="col-md-12",id=("in-progress-comps")).find(class_="list-group").find_all(class_="list-group-item not-past")
-    #         comps_on+=ongoningcomps
+    #         ongoning_comps=bs.find(class_="col-md-12",id=("in-progress-comps")).find(class_="list-group").find_all(class_="list-group-item not-past")
+    #         comps_on+=ongoning_comps
     #     except:
     #         pass
 
@@ -138,13 +166,21 @@ def return_comps(contents):
     # arg types: status, region, events
     # -e events -r region -s status
     # -s: f for full, o for open, c for closed, u for upcoming
+    # -e uses / to separate
     events="all"
     region="UK"
     comp_type=[]
     num=10
     for i in contents[1:]:
         if "-e" in i:
-            pass
+            events=[]
+            events_strs=i[2:].split("/")
+            for event in events_strs:
+                try:
+                    events.append(events_map["."+event])
+                except:
+                    pass
+
         elif "-r" in i:
             region=i[2:]
         elif "-s" in i:
@@ -179,3 +215,25 @@ def return_comps(contents):
     return txt[:-1]
 
 
+
+"""
+https://www.worldcubeassociation.org/competitions?
+event_ids%5B%5D=333&
+event_ids%5B%5D=222&
+event_ids%5B%5D=444&
+event_ids%5B%5D=555&
+event_ids%5B%5D=666&
+event_ids%5B%5D=777&
+event_ids%5B%5D=333bf&
+event_ids%5B%5D=333fm&
+event_ids%5B%5D=333oh&
+event_ids%5B%5D=clock&
+event_ids%5B%5D=minx&
+event_ids%5B%5D=pyram&
+event_ids%5B%5D=skewb&
+event_ids%5B%5D=sq1&
+event_ids%5B%5D=444bf&
+event_ids%5B%5D=555bf&
+event_ids%5B%5D=333mbf&
+region=all&search=&state=present&year=all+years&from_date=&to_date=&delegate=&show_registration_status=on&display=list
+"""

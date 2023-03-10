@@ -1,12 +1,14 @@
 import pickle
 from random import choice
-# reading scramble file
-file = open(r"data.pkl", "rb")
-# dat.pkl
-# D:\Desktop\Things\WCA\dat.pkl
-scramble_dict = pickle.load(file)
-file.close()
-
+try:
+    # reading scramble file
+    file = open(r"data.pkl", "rb")
+    # dat.pkl
+    # D:\Desktop\Things\WCA\dat.pkl
+    scramble_dict = pickle.load(file)
+    file.close()
+except:
+     scramble_dict={}
 def get_scramble(event,number=1):
     scrambles=[]
     for i in range(number):
